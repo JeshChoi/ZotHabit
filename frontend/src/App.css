@@ -1,5 +1,9 @@
 .App {
   text-align: center;
+  background: linear-gradient(45deg, #4facfe, rgb(85, 223, 138));
+  height: 100vh; /* Full viewport height */
+  width: 100%;  /* Full width */
+
 }
 
 .App-logo {
