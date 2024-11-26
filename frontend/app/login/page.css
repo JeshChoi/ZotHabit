@@ -1,0 +1,74 @@
+.container {
+    width: 33%; /* One-third of the page width */
+    margin: auto; /* Center horizontally */
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    position: relative; /* Needed for vertical centering */
+    transform: translateY(10em); /* Vertically center the container */
+  }
+  
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+    text-align: left;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  .submit-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    border: none;
+    color: white;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .submit-btn:hover {
+    background-color: #0056b3;
+  }
+  
+  .toggle-btn {
+    margin-top: 10px;
+    background-color: transparent;
+    border: none;
+    color: blue;
+    cursor: pointer;
+    text-align: center;
+    display: block;
+    width: 100%;
+    font-size: 14px;
+  }
+  
+  .toggle-btn:hover {
+    text-decoration: underline;
+  }
+  
+  /* Ensure full-page height for vertical centering */
+  body, html {
+    height: 100%;
+    margin: 0;
+  }
+  
