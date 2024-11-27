@@ -2,7 +2,7 @@ import { MongoClient } from "mongodb";
 
 const uri = process.env.MONGO_CONNECTION_URI || "mongodb://localhost:27017"; // MongoDB connection URI
 const client = new MongoClient(uri);
-const dbName = "userDatabase";
+const dbName = "Users";
 
 export async function POST(request) {
   const { email, password } = await request.json();
