@@ -6,7 +6,7 @@ export function middleware(req) {
 
   // If no cookie is found, redirect to the login page
   if (!uuid) {
-    return NextResponse.redirect(new URL("/login", req.url));
+    return NextResponse.redirect(new URL("/components/login", req.url));
   }
 
   // Allow the request to proceed if the cookie exists
