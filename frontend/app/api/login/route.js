@@ -1,8 +1,5 @@
-import { MongoClient } from "mongodb";
-
-const uri = process.env.MONGO_CONNECTION_URI || "mongodb://localhost:27017"; // MongoDB connection URI
-const client = new MongoClient(uri);
-const dbName = "Users";
+import { connectToDatabase } from "@/app/lib/db";
+import User from "@/app/lib/models/User";
 
 export async function POST(request) {
   const { email, password } = await request.json();
@@ -15,12 +12,11 @@ export async function POST(request) {
   }
 
   try {
-    await client.connect();
-    const db = client.db(dbName);
-
+    await connectToDatabase();
+    
     // Find the user by email and password
-    const user = await db.collection("users").findOne({ email, password });
-
+    const user = await User.findOne({ email, password });
+    
     if (!user) {
       return new Response(JSON.stringify({ message: "Invalid email or password." }), {
         status: 400,
@@ -39,7 +35,5 @@ export async function POST(request) {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });
-  } finally {
-    await client.close();
   }
 }

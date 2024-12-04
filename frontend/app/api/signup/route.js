@@ -1,8 +1,5 @@
-import { MongoClient, ObjectId } from "mongodb";
-
-const uri = process.env.MONGO_CONNECTION_URI; // MongoDB connection URI
-const client = new MongoClient(uri);
-const dbName = "Users";
+import { connectToDatabase } from "@/app/lib/db";
+import User from "@/app/lib/models/User";
 
 export async function POST(request) {
   const { username, email, password } = await request.json();
@@ -16,11 +13,10 @@ export async function POST(request) {
   }
 
   try {
-    await client.connect();
-    const db = client.db(dbName);
+    await connectToDatabase();
 
     // Check if email already exists
-    const existingUser = await db.collection("users").findOne({ email });
+    const existingUser = await User.findOne({ email });
     if (existingUser) {
       return new Response(JSON.stringify({ message: "Email is already registered." }), {
         status: 400,
@@ -29,15 +25,10 @@ export async function POST(request) {
     }
 
     // Insert new user, MongoDB generates a unique _id
-    const result = await db.collection("users").insertOne({
-      _id: new ObjectId(), // Optional, MongoDB generates this by default
-      username,
-      email,
-      password,
-    });
-
+    const newUser = User( {username, email, password });
+    const savedUser = await newUser.save()
     return new Response(
-      JSON.stringify({ uuid: result.insertedId }), // Return the MongoDB-generated ObjectId
+      JSON.stringify({ uuid: savedUser._id }), // Return the MongoDB-generated ObjectId
       {
         status: 201,
         headers: { "Content-Type": "application/json" },
@@ -49,7 +40,5 @@ export async function POST(request) {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });
-  } finally {
-    await client.close();
   }
 }
