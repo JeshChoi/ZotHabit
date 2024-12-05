@@ -81,6 +81,7 @@ export async function GET(request) {
 
 export async function POST(request) {
   const { userId, habitId, type, changes} = await request.json();
+  console.log(userId, habitId, type, changes);
 
   try {
     const user = await getUser(userId);
@@ -100,14 +101,20 @@ export async function POST(request) {
       }
     } else if (type === "progress") {
       // Changes HabitProgress List
-      const selectedDate = selectedHabit.progress.find((elem) => elem.date === changes.date)
+      let selectedDate = selectedHabit.progress.find((elem) => elem.date === changes.date)
       if ( !selectedDate ) {
         // If date doesn't exist, create one
-        selectedHabit.progress.push( {date: changes.date, count: changes.count} );
+        selectedDate = {date: changes.date, count: changes.count};
+        selectedHabit.progress.push( selectedDate );
       } else
       {
         // Update existing
-        selectedDate.count = Math.min(changes.count, selectedHabit.goal);
+        // Allow for more count than goal, cuz why not
+        // More fun
+        selectedDate.count = changes.count;
+      }
+      if (selectedDate.count >= selectedHabit.goal) {
+        selectedHabit.isActive = false;
       }
     }
     await user.save();

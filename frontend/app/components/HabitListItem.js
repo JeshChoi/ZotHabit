@@ -15,18 +15,20 @@ const HabitListItem = ({ habit, onComplete }) => {
     const handleClick = async () => {
         // Trigger the flash effect
         setFlash(true); 
-        const timer = async () => {
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-        };
-        timer();
+        (async () => {
+          await new Promise((resolve) => setTimeout(resolve, 300));
+          setFlash(false);
+        })();
         // Update Habit
 
         // Check if goal reached already
-        if (count == habit.goal) {
+        if (count >= habit.goal) {
           alert("Goal reached already");
           return
+        } else
+        {
+          setCount(count + 1);
         }
-
         // data to send/update
         const date = new Date();
         const new_changes = {
@@ -34,10 +36,11 @@ const HabitListItem = ({ habit, onComplete }) => {
         }
         const existingDateEntry = habit.progress.find((elem) => elem.date === new_changes.date);
         if (existingDateEntry) {
-          new_changes.count = existingDateEntry.count + 1
+          new_changes.count = existingDateEntry.count + (count + 1 - getCount())
         } else {
-          new_changes.count = 1
+          new_changes.count = (count + 1 - getCount())
         }
+      
 
         const data = {
             userId: getUUID(),
@@ -54,7 +57,7 @@ const HabitListItem = ({ habit, onComplete }) => {
           });
         // Reset the flash after 0.3 seconds
         if ( response.ok ) {
-            setCount(count + 1);
+          onComplete();
         } else {
             // If error, 
             const error = await response.json();
@@ -66,7 +69,7 @@ const HabitListItem = ({ habit, onComplete }) => {
 
   return (
     <div
-      className={`flex items-center p-4 mb-2 border rounded-md bg-white transition-all ${
+      className={`flex items-center p-4 mb-2 border rounded-md transition-all ${
         flash ? 'bg-green-500' : 'bg-white' // Change background color when flashing
       }`}
     >
