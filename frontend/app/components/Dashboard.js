@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import AddHabitModal from "./AddHabitModal";
+import HabitListItem from "./HabitListItem";
 import getUUID from "../utils/utils";
 
 export default function Dashboard() {
@@ -89,8 +90,17 @@ export default function Dashboard() {
             Sign Out
           </button>
         </div>
+        
+        {/* Motivational Quote Section */}
+        <div className="bg-white p-4 mt-6 rounded shadow">
+          <h2 className="text-lg font-semibold mb-2 text-gray-800">
+            Motivational Quote
+          </h2>
+          <p className="text-gray-700 italic">"{quote}"</p>
+          <p className="text-gray-500 mt-2">- {quoteAuthor}</p>
+        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid pt-4 grid-cols-1 md:grid-cols-3 gap-6">
           {/* Habits Section */}
           <div className="col-span-2 bg-white p-4 rounded shadow">
             <div className="flex items-center justify-between">
@@ -104,15 +114,12 @@ export default function Dashboard() {
               </button>
             </div>
             {habits.length > 0 ? (
-              habits.map((habit, index) => (
+              habits.filter((elem) => elem.isActive).map((habit, index) => (
                 <div
                   key={index}
                   className="border-b border-gray-200 py-2 last:border-none"
                 >
-                  <h3 className="font-medium text-gray-700">
-                    {habit.habitName}
-                  </h3>
-                  <p className="text-sm text-gray-500">Goal: {habit.goal}</p>
+                  <HabitListItem lastUpdated={habit.updatedAt} habit={habit} onComplete={fetchHabitsAndFriends} />
                 </div>
               ))
             ) : (
@@ -135,15 +142,6 @@ export default function Dashboard() {
               <p className="text-gray-500">No friends to show.</p>
             )}
           </div>
-        </div>
-
-        {/* Motivational Quote Section */}
-        <div className="bg-white p-4 mt-6 rounded shadow">
-          <h2 className="text-lg font-semibold mb-2 text-gray-800">
-            Motivational Quote
-          </h2>
-          <p className="text-gray-700 italic">"{quote}"</p>
-          <p className="text-gray-500 mt-2">- {quoteAuthor}</p>
         </div>
       </div>
     </div>

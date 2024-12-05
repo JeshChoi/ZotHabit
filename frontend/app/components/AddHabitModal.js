@@ -15,7 +15,7 @@ export default function AddHabitModal({ isOpen, onClose }) {
       try {
         // Attempt to send it
         const response = await fetch("/api/habits", {
-          method: "POST",
+          method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),
         });

@@ -1,10 +1,11 @@
-import { connectToDatabase, getUser } from '@/app/lib/db';
+import { connectToDatabase, getUser, getHabitById } from '@/app/lib/db';
+import HabitProgressSchema from '@/app/lib/models/HabitProgress';
 import User from '@/app/lib/models/User';
 import mongoose from 'mongoose'; 
 import { NextApiRequest } from "next";
 
 
-export async function POST(request) {
+export async function PUT(request) {
   const { userId, habitName, description, goal } = await request.json();
 
   if (!userId || !habitName) {
@@ -24,6 +25,16 @@ export async function POST(request) {
       });
     }
 
+    // Lets have habit names be unique among user, prob should set up schema
+    // like that but i'm getting tired
+    const habitExists = user.habits.find((elem) => elem.habitName === habitName);
+    if (habitExists)
+    {
+      return new Response(JSON.stringify({ message: 'Habit name exists already.' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
     user.habits.push({
       habitName: habitName, 
       description: description, 
@@ -48,14 +59,59 @@ export async function GET(request) {
   const userId = request.nextUrl.searchParams.get("userId");
 
   try {
-    await connectToDatabase();
-    const user = await User.findById(new mongoose.Types.ObjectId(userId) );
+    const user = await getUser(userId);
     if (!user) {
       return new Response(JSON.stringify({ message: 'User not found.' }), {
         status: 404,
         headers: { 'Content-Type': 'application/json' },
       });
     }
+    return new Response(JSON.stringify({ habits: user.habits }), {
+      status: 201,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch (error) {
+    console.error(error);
+    return new Response(JSON.stringify({ message: 'Internal server error.' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+}
+
+export async function POST(request) {
+  const { userId, habitId, type, changes} = await request.json();
+
+  try {
+    const user = await getUser(userId);
+    const selectedHabit = getHabitById(user, habitId);
+    if ( !selectedHabit ) {
+      console.error("Couldn't find Habit with ID: ", habitId);
+      return new Response(JSON.stringify({ message: 'Internal server error.' }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+    if (type === "habit")
+    {  
+      // Changes Habit attribute
+      for (key of changes) {
+        selectedHabit.key = changes[key];
+      }
+    } else if (type === "progress") {
+      // Changes HabitProgress List
+      const selectedDate = selectedHabit.progress.find((elem) => elem.date === changes.date)
+      if ( !selectedDate ) {
+        // If date doesn't exist, create one
+        selectedHabit.progress.push( {date: changes.date, count: changes.count} );
+      } else
+      {
+        // Update existing
+        selectedDate.count = Math.min(changes.count, selectedHabit.goal);
+      }
+    }
+    await user.save();
+
     return new Response(JSON.stringify({ habits: user.habits }), {
       status: 201,
       headers: { 'Content-Type': 'application/json' },

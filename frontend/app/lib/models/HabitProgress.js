@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const HabitProgressSchema = new mongoose.Schema({
-  date: { type: String, required: true },
+  date: { type: String, unique: true, required: true },
   count: { type: Number, default: 0 },
 });
 

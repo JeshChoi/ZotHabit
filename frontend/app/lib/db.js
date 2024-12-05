@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-
+import User from './models/User';
 const MONGO_URI = process.env.MONGO_CONNECTION_URI;
 
 if (!MONGO_URI) {
@@ -27,4 +27,20 @@ export async function connectToDatabase() {
 
   cached.conn = await cached.promise;
   return cached.conn;
+}
+
+
+export async function getUser(userId) {
+  await connectToDatabase();
+  const user = await User.findById(new mongoose.Types.ObjectId(userId) );
+  return user
+}
+
+export async function getHabitByName(user, habitName) {
+  return user.habits.find((elem) => elem.habitName === habitName );
+}
+
+export function getHabitById(user, habitId) {
+  return user.habits.find((elem) => elem._id == habitId );
+
 }
