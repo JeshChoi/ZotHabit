@@ -1,4 +1,4 @@
-import { connectToDatabase, getUserByID, getHabitById } from '@/app/lib/db';
+import { connectToDatabase, getUserByID, getHabitById, getUserByUsername } from '@/app/lib/db';
 import HabitProgressSchema from '@/app/lib/models/HabitProgress';
 import User from '@/app/lib/models/User';
 import mongoose from 'mongoose'; 
@@ -58,7 +58,16 @@ export async function GET(request) {
   const userId = request.nextUrl.searchParams.get("userId");
 
   try {
-    const user = await getUserByID(userId);
+    let user = null;
+    if (userId)
+    {
+      user = await getUserByID(userId);
+    } else 
+    {
+      const userUsername = request.nextUrl.searchParams.get("username");
+      user = await getUserByUsername(userUsername);
+    }
+    
     if (!user) {
       return new Response(JSON.stringify({ message: 'User not found.' }), {
         status: 404,
