@@ -1,8 +1,22 @@
+"use client";
+
 import React, { useState } from "react";
 import HabitListItem from "./HabitListItem"; // Import your HabitListItem component
 
-const HabitSection = ({ habits, fetchHabitsAndFriends, setAddHabitModalOpen }) => {
+const HabitSection = ({ habits, fetchHabitsAndFriends, setAddHabitModalOpen, setHabits }) => {
   const [activeTab, setActiveTab] = useState("active"); // Track active tab
+
+  const handleDeleteHabit = (habitId) => {
+    setHabits((prevHabits) => prevHabits.filter((habit) => habit._id !== habitId));
+  };
+  const handleEditComplete = (updatedHabit) => {
+    setHabits((prevHabits) =>
+      prevHabits.map((habit) =>
+        habit._id === updatedHabit._id ? updatedHabit : habit
+      )
+    );
+  };
+  
 
   return (
     <div className="col-span-2 h-full bg-white p-4 rounded shadow">
@@ -47,6 +61,8 @@ const HabitSection = ({ habits, fetchHabitsAndFriends, setAddHabitModalOpen }) =
                   lastUpdated={habit.updatedAt}
                   habit={habit}
                   onComplete={fetchHabitsAndFriends}
+                  onDelete={handleDeleteHabit}
+                  handleEditComplete={handleEditComplete}
                 />
               </div>
             ))}

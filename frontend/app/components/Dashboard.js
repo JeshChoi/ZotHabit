@@ -105,7 +105,7 @@ export default function Dashboard() {
 
 
         <div className="grid pt-4 grid-cols-1 md:grid-cols-3 gap-6">
-          <HabitSection habits={habits} fetchHabitsAndFriends={fetchHabitsAndFriends} setAddHabitModalOpen={setAddHabitModalOpen} />
+          <HabitSection habits={habits} fetchHabitsAndFriends={fetchHabitsAndFriends} setAddHabitModalOpen={setAddHabitModalOpen} setHabits={setHabits}/>
 
           <FriendsSection friends={friends} onSearch={fetchHabitsAndFriends}/>
         </div>

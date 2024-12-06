@@ -4,6 +4,96 @@ import User from '@/app/lib/models/User';
 import mongoose from 'mongoose'; 
 import { NextApiRequest } from "next";
 
+export async function DELETE(request) {
+  const { userId, habitName } = await request.json();
+
+  if (!userId || !habitName) {
+    return new Response(JSON.stringify({ message: 'User ID and habit name are required.' }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
+  try {
+    const user = await getUserByID(userId);
+    if (!user) {
+      return new Response(JSON.stringify({ message: 'User not found.' }), {
+        status: 404,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
+    const habitIndex = user.habits.findIndex((habit) => habit.habitName === habitName);
+    if (habitIndex === -1) {
+      return new Response(JSON.stringify({ message: 'Habit not found.' }), {
+        status: 404,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
+    user.habits.splice(habitIndex, 1); // Remove the habit
+    await user.save();
+
+    return new Response(JSON.stringify({ habits: user.habits }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch (error) {
+    console.error(error);
+    return new Response(JSON.stringify({ message: 'Internal server error.' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+}
+
+export async function POST(request) {
+  const { userId, habitName, updates } = await request.json();
+
+  if (!userId || !habitName || !updates) {
+    return new Response(JSON.stringify({ message: 'User ID, habit name, and updates are required.' }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
+  try {
+    const user = await getUserByID(userId);
+    if (!user) {
+      return new Response(JSON.stringify({ message: 'User not found.' }), {
+        status: 404,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
+    const habit = user.habits.find((habit) => habit.habitName === habitName);
+    if (!habit) {
+      return new Response(JSON.stringify({ message: 'Habit not found.' }), {
+        status: 404,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
+    // Apply updates to the habit
+    Object.keys(updates).forEach((key) => {
+      habit[key] = updates[key];
+    });
+
+    await user.save();
+
+    return new Response(JSON.stringify({ habits: user.habits }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch (error) {
+    console.error(error);
+    return new Response(JSON.stringify({ message: 'Internal server error.' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+}
+
 
 export async function PUT(request) {
   const { userId, habitName, description, goal } = await request.json();
@@ -87,55 +177,55 @@ export async function GET(request) {
   }
 }
 
-export async function POST(request) {
-  const { userId, habitId, type, changes} = await request.json();
-  console.log(userId, habitId, type, changes);
+// export async function POST(request) {
+//   const { userId, habitId, type, changes} = await request.json();
+//   console.log(userId, habitId, type, changes);
 
-  try {
-    const user = await getUserByID(userId);
-    const selectedHabit = getHabitById(user, habitId);
-    if ( !selectedHabit ) {
-      console.error("Couldn't find Habit with ID: ", habitId);
-      return new Response(JSON.stringify({ message: 'Internal server error.' }), {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
-    if (type === "habit")
-    {  
-      // Changes Habit attribute
-      for (key of changes) {
-        selectedHabit.key = changes[key];
-      }
-    } else if (type === "progress") {
-      // Changes HabitProgress List
-      let selectedDate = selectedHabit.progress.find((elem) => elem.date === changes.date)
-      if ( !selectedDate ) {
-        // If date doesn't exist, create one
-        selectedDate = {date: changes.date, count: changes.count};
-        selectedHabit.progress.push( selectedDate );
-      } else
-      {
-        // Update existing
-        // Allow for more count than goal, cuz why not
-        // More fun
-        selectedDate.count = changes.count;
-      }
-      if (selectedDate.count >= selectedHabit.goal) {
-        selectedHabit.isActive = false;
-      }
-    }
-    await user.save();
+//   try {
+//     const user = await getUserByID(userId);
+//     const selectedHabit = getHabitById(user, habitId);
+//     if ( !selectedHabit ) {
+//       console.error("Couldn't find Habit with ID: ", habitId);
+//       return new Response(JSON.stringify({ message: 'Internal server error.' }), {
+//         status: 500,
+//         headers: { 'Content-Type': 'application/json' },
+//       });
+//     }
+//     if (type === "habit")
+//     {  
+//       // Changes Habit attribute
+//       for (key of changes) {
+//         selectedHabit.key = changes[key];
+//       }
+//     } else if (type === "progress") {
+//       // Changes HabitProgress List
+//       let selectedDate = selectedHabit.progress.find((elem) => elem.date === changes.date)
+//       if ( !selectedDate ) {
+//         // If date doesn't exist, create one
+//         selectedDate = {date: changes.date, count: changes.count};
+//         selectedHabit.progress.push( selectedDate );
+//       } else
+//       {
+//         // Update existing
+//         // Allow for more count than goal, cuz why not
+//         // More fun
+//         selectedDate.count = changes.count;
+//       }
+//       if (selectedDate.count >= selectedHabit.goal) {
+//         selectedHabit.isActive = false;
+//       }
+//     }
+//     await user.save();
 
-    return new Response(JSON.stringify({ habits: user.habits }), {
-      status: 201,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  } catch (error) {
-    console.error(error);
-    return new Response(JSON.stringify({ message: 'Internal server error.' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  }
-}
+//     return new Response(JSON.stringify({ habits: user.habits }), {
+//       status: 201,
+//       headers: { 'Content-Type': 'application/json' },
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     return new Response(JSON.stringify({ message: 'Internal server error.' }), {
+//       status: 500,
+//       headers: { 'Content-Type': 'application/json' },
+//     });
+//   }
+// }
