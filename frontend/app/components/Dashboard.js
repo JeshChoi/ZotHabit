@@ -12,7 +12,7 @@ export default function Dashboard() {
   const [friends, setFriends] = useState([]);
   const [quote, setQuote] = useState("");
   const [quoteAuthor, setQuoteAuthor] = useState("");
-
+  const [username, setUsername] = useState("");
   async function fetchHabitsAndFriends() {
     try {
       const habitsResponse = await fetch(`/api/habits?` + new URLSearchParams({userId: getUUID()}).toString());
@@ -30,6 +30,16 @@ export default function Dashboard() {
     } 
   };
 
+  async function getUsername() {
+    try {
+      const userResponse = await fetch(`/api/users?` + new URLSearchParams({userId: getUUID()}).toString());
+      const user = await userResponse.json();
+      return user.user.username;
+    } catch (error) {
+      console.error("Error fetching user:", error);
+    } 
+  };
+
   useEffect(() => {
     const checkAuth = () => {
         const cookies = document.cookie
@@ -44,7 +54,7 @@ export default function Dashboard() {
   
     checkAuth();
     // Fetch habits and friends list
-    
+    setUsername(getUsername());
     fetchHabitsAndFriends();
 
     // Fetch motivational quote
@@ -80,7 +90,7 @@ export default function Dashboard() {
       <div className="container mx-auto">
         <AddHabitModal isOpen={isAddHabitModalOpen} onClose={closeHabitModal}/>
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
+          <h1 className="text-2xl font-bold text-gray-800">Welcome {username},</h1>
           <button
             onClick={() => {
               // Clear the 'uuid' cookie
