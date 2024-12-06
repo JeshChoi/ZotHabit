@@ -31,7 +31,8 @@ const HabitListItem = ({ habit, onComplete }) => {
 
         // Check if goal reached already
         if (count >= habit.goal) {
-          alert("Goal reached already");
+          // Alert kind annoying, so commented out for not
+          // alert("Goal reached already");
           return
         } else
         {

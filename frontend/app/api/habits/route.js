@@ -1,4 +1,4 @@
-import { connectToDatabase, getUser, getHabitById } from '@/app/lib/db';
+import { connectToDatabase, getUserByID, getHabitById } from '@/app/lib/db';
 import HabitProgressSchema from '@/app/lib/models/HabitProgress';
 import User from '@/app/lib/models/User';
 import mongoose from 'mongoose'; 
@@ -16,8 +16,7 @@ export async function PUT(request) {
   }
 
   try {
-    await connectToDatabase();
-    const user = await User.findById(new mongoose.Types.ObjectId(userId) );
+    const user = await getUserByID(userId);
     if (!user) {
       return new Response(JSON.stringify({ message: 'User not found.' }), {
         status: 404,
@@ -59,7 +58,7 @@ export async function GET(request) {
   const userId = request.nextUrl.searchParams.get("userId");
 
   try {
-    const user = await getUser(userId);
+    const user = await getUserByID(userId);
     if (!user) {
       return new Response(JSON.stringify({ message: 'User not found.' }), {
         status: 404,
@@ -84,7 +83,7 @@ export async function POST(request) {
   console.log(userId, habitId, type, changes);
 
   try {
-    const user = await getUser(userId);
+    const user = await getUserByID(userId);
     const selectedHabit = getHabitById(user, habitId);
     if ( !selectedHabit ) {
       console.error("Couldn't find Habit with ID: ", habitId);

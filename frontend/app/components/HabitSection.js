@@ -5,7 +5,7 @@ const HabitSection = ({ habits, fetchHabitsAndFriends, setAddHabitModalOpen }) =
   const [activeTab, setActiveTab] = useState("active"); // Track active tab
 
   return (
-    <div className="col-span-2 bg-white p-4 rounded shadow">
+    <div className="col-span-2 h-full bg-white p-4 rounded shadow">
       {/* Tabs */}
       <div className="flex items-center border-b border-gray-200 mb-4">
         <button
@@ -29,10 +29,11 @@ const HabitSection = ({ habits, fetchHabitsAndFriends, setAddHabitModalOpen }) =
           Completed Habits
         </button>
       </div>
-
+      
       {/* Content Section */}
+      <div className="h-96 overflow-y-auto">
       {habits.length > 0 ? (
-        <div className="h-96 overflow-y-auto">
+        <div>
           {habits
             .filter((elem) =>
               activeTab === "completed" ? !elem.isActive : elem.isActive
@@ -57,6 +58,7 @@ const HabitSection = ({ habits, fetchHabitsAndFriends, setAddHabitModalOpen }) =
             : "No active habits to show."}
         </p>
       )}
+      </div>
 
       {/* Add Habit Button */}
       {activeTab === "active" && (

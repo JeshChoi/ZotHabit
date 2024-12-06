@@ -5,6 +5,7 @@ import AddHabitModal from "./AddHabitModal";
 import HabitListItem from "./HabitListItem";
 import getUUID from "../utils/utils";
 import HabitSection from "./HabitSection";
+import FriendsSection from "./FriendSection";
 
 export default function Dashboard() {
   const [habits, setHabits] = useState([]);
@@ -15,14 +16,15 @@ export default function Dashboard() {
   async function fetchHabitsAndFriends() {
     try {
       const habitsResponse = await fetch(`/api/habits?` + new URLSearchParams({userId: getUUID()}).toString());
-      // const friendsResponse = await fetch("/api/friends");
+      const friendsResponse = await fetch(`/api/friends?` + new URLSearchParams({userId: getUUID()}).toString());
 
 
       const habitsData = await habitsResponse.json();
-      // const friendsData = await friendsResponse.json();
+      const friendsData = await friendsResponse.json();
+      console.log(friendsData.friends);
 
       setHabits(habitsData.habits);
-      // setFriends(friendsData);
+      setFriends(friendsData.friends);
     } catch (error) {
       console.error("Error fetching habits or friends:", error);
     } 
@@ -72,7 +74,6 @@ export default function Dashboard() {
     fetchHabitsAndFriends();
     setAddHabitModalOpen(false);
   };
-  const openHabitModal = () => setAddHabitModalOpen(true);
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
@@ -106,21 +107,7 @@ export default function Dashboard() {
         <div className="grid pt-4 grid-cols-1 md:grid-cols-3 gap-6">
           <HabitSection habits={habits} fetchHabitsAndFriends={fetchHabitsAndFriends} setAddHabitModalOpen={setAddHabitModalOpen} />
 
-          {/* Friends Section */}
-          <div className="bg-white p-4 rounded shadow">
-            <h2 className="text-lg font-semibold mb-4 text-gray-800">
-              Friends
-            </h2>
-            {friends.length > 0 ? (
-              friends.map((friend, index) => (
-                <div key={index} className="py-1 text-gray-700 h-96 overflow-y-auto">
-                  {friend.username}
-                </div>
-              ))
-            ) : (
-              <p className="text-gray-500">No friends to show.</p>
-            )}
-          </div>
+          <FriendsSection friends={friends} onSearch={fetchHabitsAndFriends}/>
         </div>
       </div>
     </div>

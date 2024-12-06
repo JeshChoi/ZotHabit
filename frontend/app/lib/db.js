@@ -30,9 +30,15 @@ export async function connectToDatabase() {
 }
 
 
-export async function getUser(userId) {
+export async function getUserByID(userId) {
   await connectToDatabase();
   const user = await User.findById(new mongoose.Types.ObjectId(userId) );
+  return user
+}
+
+export async function getUserByUsername(username) {
+  await connectToDatabase();
+  const user = await User.findOne({ username});
   return user
 }
 
