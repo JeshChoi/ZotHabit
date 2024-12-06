@@ -17,6 +17,12 @@ export async function PUT(request) {
     const user = await getUserByID(userId);
     // Find Friend
     const newFriend = await getUserByUsername(friendUsername);
+    if (friendUsername == user.username) {
+      return new Response(JSON.stringify({ message: "Cannot add yourself." }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
     if (! newFriend)
     {
       return new Response(JSON.stringify({ message: 'Username not found.' }), {

@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import getUUID from "../utils/utils";
+import FriendCard from "./FriendCard";
 
 const FriendsSection = ({ friends, onSearch}) => {
+  const [showProfile, setShowProfile] = useState("");
   async function addFriend(event) {
     event.preventDefault();
     const formData = new FormData(event.target);
@@ -55,14 +57,18 @@ const FriendsSection = ({ friends, onSearch}) => {
       {friends.length > 0 ? (
         <div className="h-96 overflow-y-auto">
           {friends.map((friend, index) => (
-            <div key={index} className="py-1 text-gray-700">
+            <div key={index} className="ml-3">
+            <h3 className="text-lg cursor-pointer hover:underline"
+            onClick={() => setShowProfile(friend)}>
               {friend}
-            </div>
+            </h3>
+          </div>
           ))}
         </div>
       ) : (
         <p className="text-gray-500">No friends to show.</p>
       )}
+      {showProfile.length != 0 && <FriendCard friendName={showProfile} onClose={() => setShowProfile("")}/>}
     </div>
   );
 };
