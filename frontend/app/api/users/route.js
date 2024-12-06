@@ -1,4 +1,4 @@
-import { connectToDatabase } from '@/app/lib/db';
+import { connectToDatabase, getUserByID, getUserByUsername } from '@/app/lib/db';
 import User from '@/app/lib/models/User';
 
 export async function POST(request) {
@@ -35,3 +35,36 @@ export async function POST(request) {
     });
   }
 }
+
+export async function GET(request) {
+  const userId = request.nextUrl.searchParams.get("userId");
+
+  try {
+    let user = null;
+    if (userId) {
+      user = await getUserByID(userId);
+    } else {
+      const userUsername = request.nextUrl.searchParams.get("username");
+      user = await getUserByUsername(userUsername);
+    }
+    if (!user) {
+      return new Response(JSON.stringify({ message: 'User not found.' }), {
+        status: 404,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+    return new Response(JSON.stringify({ user: user }), {
+      status: 201,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch (error) {
+    console.error(error);
+    return new Response(JSON.stringify({ message: 'Internal server error.' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+}
+
+
+

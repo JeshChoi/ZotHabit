@@ -46,7 +46,10 @@ const HabitSection = ({ habits, fetchHabitsAndFriends, setAddHabitModalOpen, set
       
       {/* Content Section */}
       <div className="h-96 overflow-y-auto">
-      {habits.length > 0 ? (
+      {(habits.length > 0 && habits
+            .filter((elem) =>
+              activeTab === "completed" ? !elem.isActive : elem.isActive
+            ).length > 0) ? (
         <div>
           {habits
             .filter((elem) =>
