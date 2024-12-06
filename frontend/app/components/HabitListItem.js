@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import getUUID from "../utils/utils";
+import HabitCard from "./HabitCard";
+
 const HabitListItem = ({ habit, onComplete }) => {
     function getCount() {
         var res = 0
@@ -10,9 +12,15 @@ const HabitListItem = ({ habit, onComplete }) => {
     }
     const [count, setCount] = useState(getCount());
     const [flash, setFlash] = useState(false);
+    const [isCardOpen, setIsCardOpen] = useState(false);
 
+    const toggleCard = () => {
+      setIsCardOpen(! isCardOpen);
+    };
+  
     // Function to handle the click
     const handleClick = async () => {
+      if (! habit.isActive) { return; }
         // Trigger the flash effect
         setFlash(true); 
         (async () => {
@@ -68,24 +76,25 @@ const HabitListItem = ({ habit, onComplete }) => {
     };
 
   return (
-    <div
-      className={`flex items-center p-4 mb-2 border rounded-md transition-all ${
-        flash ? 'bg-green-500' : 'bg-white' // Change background color when flashing
-      }`}
-    >
-      <div
-        onClick={handleClick}
-        className={`h-6 w-6 cursor-pointer lg flex items-center justify-center transition-all`}>
-        <span className="text-lg">{'+'}</span>
+    <div className={`flex items-center p-4 mb-2 border rounded-md transition-all ${(!habit.isActive || flash) ? (flash ? 'border-green-500 bg-green-500' : 'border-green-300 bg-green-300' ) : 'border-gray-300 bg-white'}`}>
+      <div onClick={handleClick}
+        className={`h-6 w-6 cursor-pointer flex items-center justify-center transition-all ${
+        !habit.isActive  ? 'bg-green-300' : ''}`}>
+        {!habit.isActive ? '✔' : '+'}
       </div>
-        <div className="ml-3">
-            <h3 className="text-lg font-semibold">{habit.habitName}</h3>
-        </div>
-        <div className="ml-auto">
-            <p>
-            {count} / {habit.goal}
-            </p>
-        </div>
+      <div className="ml-3">
+        <h3 className="text-lg font-semibold hover:text-blue-600 cursor-pointer hover:underline"
+          onClick={toggleCard}>
+          {habit.habitName}
+        </h3>
+      </div>
+      <div className="ml-auto">
+          <p>
+          {count} / {habit.goal}
+          </p>
+      </div>
+      {isCardOpen && <HabitCard habit={habit} onClose={toggleCard} />}
+
     </div>
   );
 };

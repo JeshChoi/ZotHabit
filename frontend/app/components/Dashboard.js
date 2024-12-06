@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import AddHabitModal from "./AddHabitModal";
 import HabitListItem from "./HabitListItem";
 import getUUID from "../utils/utils";
+import HabitSection from "./HabitSection";
 
 export default function Dashboard() {
   const [habits, setHabits] = useState([]);
@@ -101,64 +102,9 @@ export default function Dashboard() {
           <p className="text-gray-500 mt-2">- {quoteAuthor}</p>
         </div>
 
-        <div className="bg-white p-4 mt-6 rounded shadow">
-          {/* Habits Section */}
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold mb-4 text-gray-800">
-                Completed
-              </h2>
-            </div>
-            {(habits.length > 0 && habits.filter((elem) => ! elem.isActive).length > 0) ? (
-                habits.filter((elem) => ! elem.isActive).map((habit, index) => (
-                  <div
-                    key={index}
-                    className="border-b border-gray-200 py-2 last:border-none"
-                  >
-                    <HabitListItem lastUpdated={habit.updatedAt} habit={habit} onComplete={fetchHabitsAndFriends} />
-                  </div>
-                ))
-              ) : (
-                <p className="text-gray-500">Lets get on that!</p>
-              )}
-        </div>
 
         <div className="grid pt-4 grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="col-span-2 bg-white p-4 rounded shadow">
-  <div className="flex items-center justify-between">
-    <h2 className="text-lg font-semibold mb-4 text-gray-800">
-      Your Habits
-    </h2>
-
-    <button
-      className="ml-4 bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600 transition"
-      onClick={() => setAddHabitModalOpen(true)}
-    >
-      Add Habit
-    </button>
-  </div>
-
-  {habits.length > 0 ? (
-    <div className="max-h-96 overflow-y-auto">
-      {habits
-        .filter((elem) => elem.isActive)
-        .slice(0, 7) // Limit to 7 habits
-        .map((habit, index) => (
-          <div
-            key={index}
-            className="border-b border-gray-200 py-2 last:border-none"
-          >
-            <HabitListItem
-              lastUpdated={habit.updatedAt}
-              habit={habit}
-              onComplete={fetchHabitsAndFriends}
-            />
-          </div>
-        ))}
-    </div>
-  ) : (
-    <p className="text-gray-500">No habits to show.</p>
-  )}
-</div>
+          <HabitSection habits={habits} fetchHabitsAndFriends={fetchHabitsAndFriends} setAddHabitModalOpen={setAddHabitModalOpen} />
 
           {/* Friends Section */}
           <div className="bg-white p-4 rounded shadow">
@@ -167,9 +113,9 @@ export default function Dashboard() {
             </h2>
             {friends.length > 0 ? (
               friends.map((friend, index) => (
-                <p key={index} className="py-1 text-gray-700">
+                <div key={index} className="py-1 text-gray-700 h-96 overflow-y-auto">
                   {friend.username}
-                </p>
+                </div>
               ))
             ) : (
               <p className="text-gray-500">No friends to show.</p>
