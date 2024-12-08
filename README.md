@@ -6,20 +6,27 @@ Welcome to **ZotHabit**, the ultimate accountability app designed for Anteaters 
 ---
 
 ## 🎯 **Key Features**
-- **Habit Tracking**: Create, customize, and track your daily habits with ease.
-- **Community Accountability**: Join or create habit groups to stay motivated and accountable with friends and peers.
-- **Streaks and Rewards**: Build streaks and earn rewards for staying consistent.
-- **Progress Insights**: View detailed stats to analyze your progress and adjust your habits.
-- **UCI Spirit**: Celebrate your achievements with Zot-themed badges and milestones! 🐜💙
+- **Habit Tracking**: Create, customize, and track your daily habits with ease.  
+- **Community Accountability**: Join or create habit groups to stay motivated and accountable with friends and peers.  
+- **Progress Insights**: View detailed stats to analyze your progress and adjust your habits.  
+- **UCI Spirit**: Celebrate your achievements with Zot-themed badges and milestones! 🐜💙  
 
 ---
 
 ## 🛠 **Getting Started**
-1. **Download the App**: (Insert download link or instructions here)
-2. **Create an Account**: Sign up with your UCI email to join the ZotHabit community.
-3. **Set Your Goals**: Add habits you want to build or improve.
-4. **Join Groups**: Connect with friends, classmates, or clubs for shared accountability.
-5. **Track & Grow**: Log your habits daily and watch your progress grow!
+1. **Download the App**: (Insert download link or instructions here)  
+2. **Set Up Your Environment**:  
+   - Create a `.env` file in your project root directory.  
+   - Add the following MongoDB connection string to the `.env` file as shown in the **A5 Project Submission**:  
+     ```plaintext
+     MONGO_CONNECTION_URI=your_connection_string_here
+     ```  
+   - Replace `your_connection_string_here` with the appropriate connection string provided in our A5 submission. Please take a look at our submission for the connection string.  
+
+3. **Create an Account**: Sign up with your UCI email to join the ZotHabit community.  
+4. **Set Your Goals**: Add habits you want to build or improve.  
+5. **Join Groups**: Connect with friends, classmates, or clubs for shared accountability.  
+6. **Track & Grow**: Log your habits daily and watch your progress grow!  
 
 ---
 
@@ -34,4 +41,4 @@ Email: [choiji2@uci.edu](mailto:choiji2@uci.edu)
 
 ---
 
-**Zot on! 🐜💙**  
+**Zot on! 🐜💙**
