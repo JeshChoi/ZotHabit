@@ -7,7 +7,7 @@ Welcome to **ZotHabit**, the ultimate accountability app designed for Anteaters 
 
 ## 🎯 **Key Features**
 - **Habit Tracking**: Create, customize, and track your daily habits with ease.  
-- **Community Accountability**: Join or create habit groups to stay motivated and accountable with friends and peers.  
+- **Community Accountability**: Stay motivated and accountable with friends and peers.  
 - **Progress Insights**: View detailed stats to analyze your progress and adjust your habits.  
 - **UCI Spirit**: Celebrate your achievements with Zot-themed badges and milestones! 🐜💙  
 
@@ -25,8 +25,7 @@ Welcome to **ZotHabit**, the ultimate accountability app designed for Anteaters 
 
 3. **Create an Account**: Sign up with your UCI email to join the ZotHabit community.  
 4. **Set Your Goals**: Add habits you want to build or improve.  
-5. **Join Groups**: Connect with friends, classmates, or clubs for shared accountability.  
-6. **Track & Grow**: Log your habits daily and watch your progress grow!  
+5. **Track & Grow**: Log your habits daily and watch your progress grow!  
 
 ---
 
